@@ -1,0 +1,3689 @@
+import React, { Component } from 'react'
+
+import '../BusinessArea/BA.css';
+
+import {Link } from "react-router-dom";
+
+import DatePicker from 'react-date-picker';
+
+import MultiSelect from "react-multi-select-component";
+
+import MasterService from '../../../services/master.service';
+
+import StateService from '../../../services/state.service';
+
+import authHeader from '../../../services/auth-header';
+
+import './Date.css';
+
+import '../BusinessArea/BA.css';
+
+import Navbar from '../../NavBar/NavBar'
+
+import axios from 'axios';
+
+import $ from 'jquery';
+
+import { filter } from 'lodash';
+
+import { findAllByDisplayValue } from '@testing-library/react';
+
+ 
+
+// import { state } from './State';
+
+// import { render } from '@testing-library/react';
+
+ 
+
+ 
+
+class UpdateAct extends Component {
+
+  constructor(props) {
+
+    super(props)
+
+ 
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+
+    this.onChangeIndustry = this.onChangeIndustry.bind(this);
+
+    this.onChangeCompType = this.onChangeCompType.bind(this);
+
+    this.onChangeLocType = this.onChangeLocType.bind(this);
+
+    this.handleChange = this.handleChange.bind(this);
+
+    this.handleDisplay = this.handleDisplay.bind(this);
+
+    this.handleDisplay2 = this.handleDisplay2.bind(this);
+
+    this.handleAddClick = this.handleAddClick.bind(this);
+
+    this.deleteState = this.deleteState.bind(this);
+
+    // this.setEndDate = this.setEndDate.bind(this);
+
+    this.handleChekbox = this.handleChekbox.bind(this);
+
+    this.handleChekbox2 = this.handleChekbox2.bind(this);
+
+    this.handleDate = this.handleDate.bind(this);
+
+    this.handleDate2 = this.handleDate2.bind(this);
+
+    this.selectFile = this.selectFile.bind(this);
+
+    // this.delImage = this.delImage.bind(this);
+
+ 
+
+    this.state = {
+
+            id: this.props.match.params.id,
+
+            actname:'',
+
+            data:[],
+
+            data_comp:[],
+
+            data_ba:[],
+
+            data_loc:[],
+
+            act_group_name:'',
+
+            selectedold1:[],
+
+            checked2:false,
+
+            checked:false,
+
+            endDate:"",
+
+            startDate:"",
+
+            central_or_state:'',
+
+            subloc:'',
+
+            // formValues:
+
+            inputList:[ {activity_name:"",activity_category:"", month:"",date:"",importance_level:"",rule_information:"",}],
+
+            formErrors:{
+
+               
+
+            },
+
+            selected:[],
+
+            selected1:[],
+
+            selected2:[],
+
+            actList:[],
+
+            a:[],
+
+            noState:[],
+
+            result:[],
+
+            activityList:[],
+
+            actapplicable:"",
+
+            disable1:false,
+
+            pdf:'',
+
+            selectedFiles:[],
+
+            selectedstate:"",
+
+            testarray:[],
+
+            testarray2:[],
+
+            actstateid:"",
+
+            newinputList:[],
+
+            newactList:[],
+
+ 
+
+            appstate:[],
+
+ 
+
+            successful: false,
+
+            message: "",
+
+            successful2: false,
+
+            message2: "",
+
+            successful3: false,
+
+            message3: "",
+
+ 
+
+            imageList: [],
+
+            fileselected : false,
+
+           
+
+ 
+
+    }
+
+    // this.initialState = this.state;   
+
+ 
+
+   
+
+ 
+
+  }
+
+ 
+
+  handleChange = (e) => {   
+
+    const { name, value } = e.target;   
+
+    this.setState({ [name]: value });   
+
+  }
+
+ 
+
+  handleChekbox(){   
+
+    this.setState({
+
+      checked : !this.state.checked
+
+    })   
+
+  }
+
+  handleChekbox2(){   
+
+    this.setState({
+
+      checked2 : !this.state.checked2
+
+    })   
+
+  }
+
+ 
+
+  handleDate=(date)=>{
+
+    this.setState({ startDate : date})
+
+   }
+
+ 
+
+   handleDate2=(date)=>{
+
+    this.setState({ endDate : date})
+
+   }
+
+ 
+
+ 
+
+  onChangeIndustry=(e)=>{
+
+    this.setState({ selected : e})
+
+  }
+
+ 
+
+  onChangeCompType=(e)=>{
+
+    this.setState({ selected1 : e})
+
+  }
+
+ 
+
+  onChangeLocType=(e)=>{
+
+    this.setState({ selected2 : e})
+
+  }
+
+ 
+
+ 
+
+  
+
+ 
+
+  componentDidMount(){ 
+
+    
+
+    this.setState({
+
+      successful: "",
+
+      message: ""
+
+    });
+
+ 
+
+    /*get all industries */
+
+    MasterService.getAllIndustry()
+
+    .then((response) => {
+
+        this.setState({
+
+          data:response.data
+
+        });
+
+    })
+
+    .catch((e) => {
+
+        console.log(e);
+
+    });
+
+ 
+
+    /*get all comp types */
+
+    MasterService.getAllCompanyTypes()
+
+    .then((response) => {
+
+      this.setState({
+
+        data_comp:response.data
+
+      });
+
+    })
+
+    .catch((e) => {
+
+        console.log(e);
+
+    });
+
+ 
+
+    /*get all comp businessarea */
+
+    MasterService.getAllAreas()
+
+    .then((response) => {
+
+      this.setState({
+
+        data_ba:response.data
+
+      });
+
+    })
+
+    .catch((e) => {
+
+        console.log(e);
+
+    });
+
+ 
+
+ 
+
+    /*get all location type */
+
+    MasterService.getAllLocationTypes()
+
+    .then((response) => {
+
+      this.setState({
+
+        data_loc:response.data
+
+      });
+
+    })
+
+    .catch((e) => {
+
+        console.log(e);
+
+    });
+
+ 
+
+    /*get abstract */
+
+    MasterService.getActAbstract(this.state.id)
+
+    .then(response => {
+
+      this.setState({ selectedFiles:response.data})
+
+      // console.log("il",this.state.selectedFiles)
+
+      }
+
+    );
+
+ 
+
+    MasterService.getActById(this.state.id)
+
+      .then((response) => {
+
+        console.log(response.data)
+
+        this.setState({
+
+          actname: response.data.act_name,
+
+          act_group_name : response.data.act_group_name,
+
+          centralorstate : response.data.central_or_state,
+
+          barea :response.data.business_area_id,
+
+          checked: response.data.has_abstract,
+
+          checked2: response.data.has_password,
+
+          startDate:new Date(response.data.act_start_date),
+
+          actapplicable: response.data.act_applicable_state ,
+
+          pdf : response.data.abstract_file,
+
+          testarray: response.data.actList ,         
+
+        })
+
+ 
+
+        if(response.data.act_end_date){
+
+          this.setState({
+
+            endDate :new Date(response.data.act_end_date)
+
+          })         
+
+        }
+
+       
+
+        // /*fetch industries */
+
+ 
+
+        let x=[];      
+
+        response.data.industry_id.forEach((item) => {
+
+          MasterService.getIndustryById(item)
+
+            .then((response) => {
+
+              x.push({
+
+                value : response.data.industry_id,
+
+                label : response.data.industry_name               
+
+              })
+
+             
+
+              this.setState({
+
+                selected : x
+
+              })
+
+            })
+
+        })
+
+ 
+
+ 
+
+         // /*fetch company_type */
+
+         let y=[];       
+
+         response.data.company_type_id.forEach((item) => {
+
+           MasterService.getCompanyTypeById(item)
+
+             .then((response) => {
+
+               y.push({
+
+                 value : response.data.company_type_id,
+
+                 label : response.data.company_type_name               
+
+               })
+
+               this.setState({
+
+                selected1 : y
+
+              })                             
+
+             })
+
+         })
+
+ 
+
+ 
+
+          // /*fetch  location_id/ */
+
+        let z=[];    
+
+        response.data.location_types.forEach((item) => {
+
+          MasterService.getLocationTypeById(item)
+
+            .then((response) => {
+
+              z.push({
+
+                value : response.data.location_id,
+
+                label : response.data.location_name               
+
+              })
+
+              this.setState({
+
+                selected2 : z
+
+              })                               
+
+            })
+
+        })
+
+ 
+
+        let s=[];    
+
+        // console.log("response.data",response.data.actList) 
+
+        response.data.actList.forEach((item) => {
+
+          StateService.getstatebyId(item.state_id)
+
+            .then((response) => {
+
+              s.push({
+
+                value : response.data.id,
+
+                label : response.data.name               
+
+              })
+
+              
+
+              this.setState({
+
+                actList :s
+
+              })
+
+              if(this.state.actList.length<2){
+
+                this.setState({disable1:true})
+
+              }
+
+              else{
+
+                this.setState({disable1:false})
+
+              }
+
+            })
+
+        })
+
+ 
+
+       
+
+ 
+
+ 
+
+        /*get all states */
+
+        StateService.getAll()
+
+        .then((response) => {
+
+          this.setState({
+
+            a :response.data
+
+          })
+
+ 
+
+          let b=[];
+
+        
+
+          this.state.a.forEach((item) => {
+
+            b.push({
+
+              value : item.id,
+
+              label : item.name               
+
+            })
+
+ 
+
+            this.setState({
+
+              noState: b
+
+            })
+
+          })
+
+         
+
+          function comparer(otherArray)
+
+          {
+
+            return function(current){
+
+              return otherArray.filter(function(other){
+
+                return other.value == current.value && other.display == current.display
+
+              }).length == 0;
+
+            }
+
+          }
+
+          var onlyInA = this.state.noState.filter(comparer(this.state.actList));
+
+          var onlyInB = this.state.actList.filter(comparer(this.state.noState));
+
+ 
+
+          this.setState({
+
+            result : onlyInA.concat(onlyInB),
+
+           
+
+          })
+
+        })
+
+       
+
+        .catch((e) => {
+
+            console.log(e);
+
+        }); 
+
+ 
+
+      })
+
+      .catch((e) => {
+
+          console.log(e);
+
+      });
+
+ 
+
+   
+
+      
+
+  }
+
+ 
+
+  selectFile(event) {
+
+    // $("#logo").style(css,'color')
+
+    if(document.getElementById("logo")){
+
+      document.getElementById("logo").style.color = "rgba(1,1,1,1)";
+
+    }
+
+  
+
+    // document.getElementById("imgname").style.display = "none";
+
+    // document.getElementById("imgdisplay").style.display = "none";
+
+    if(document.getElementById("btnImgDel")){
+
+      document.getElementById("btnImgDel").style.display = "none";
+
+    }
+
+  
+
+    this.setState({
+
+      selectedFiles: event.target.files,
+
+      fileselected:true
+
+      // file: URL.createObjectURL(event.target.files[0])
+
+    });
+
+   
+
+    
+
+  }
+
+ 
+
+ 
+
+  /*byte to pdf */
+
+  Download() {
+
+    function base64ToArrayBuffer(base64) {
+
+      var binaryString = window.atob(base64);
+
+      var binaryLen = binaryString.length;
+
+      var bytes = new Uint8Array(binaryLen);
+
+      for (var i = 0; i < binaryLen; i++) {
+
+         var ascii = binaryString.charCodeAt(i);
+
+         bytes[i] = ascii;
+
+      }
+
+      return bytes;
+
+   }
+
+ 
+
+    function saveByteArray(reportName, byte) {
+
+      var blob = new Blob([byte], {type: "application/pdf"});
+
+      var url = URL.createObjectURL(blob);
+
+      window.open(url);
+
+    };
+
+ 
+
+    var sampleArr = base64ToArrayBuffer(this.state.selectedFiles);
+
+    saveByteArray("Sample Report", sampleArr);
+
+   
+
+  }
+
+ 
+
+ 
+
+  deleteState = (optionvalue) =>{
+
+    // window.confirm("Are you sure you want to delete?");
+
+   
+
+    var r=window.confirm("Are you sure you want to delete this state?")
+
+    if(r==true){
+
+        console.log("OV",optionvalue)
+
+        let a = []
+
+        MasterService.getActById(this.state.id)
+
+        .then((response) => {
+
+            let x = response.data.actList
+
+            for(var i = 0; i < x.length; i++)
+
+            {
+
+              if(x[i].state_id !== optionvalue)
+
+              {
+
+                a.push(x[i])              
+
+              }
+
+            }
+
+ 
+
+            a.map( el=>{
+
+              if(el["act_state_id"]){
+
+                delete el["act_state_id"]
+
+              }
+
+              if(el.activityList){
+
+                el.activityList.map( el=>{
+
+                  if(el["activities_id"]){
+
+                    delete el["activities_id"]
+
+                  }     
+
+                })
+
+              }        
+
+            })
+
+ 
+
+            var act_data = {
+
+              actList: a,
+
+            };
+
+     
+
+            act_data = JSON.stringify(act_data);
+
+ 
+
+              MasterService.delActState(
+
+                act_data,
+
+                this.state.id
+
+                ).then(
+
+                response => {
+
+                  this.componentDidMount();
+
+                  this.setState({
+
+                    message2: response.data.message,
+
+                    successful2: false                       
+
+                  });
+
+                },
+
+                error => {
+
+                  const resMessage = "Act Could not be Updated"
+
+                  this.setState({
+
+                      successful2: false,
+
+                      message2: resMessage
+
+                  });
+
+                }
+
+              );
+
+              setTimeout(function() {
+
+                $('#alertBox2').fadeOut('fast');
+
+               }, 5000);            
+
+            // this.componentDidMount();
+
+        });  
+
+ 
+
+    }else{
+
+        // alert("Delete operation aborted")
+
+    }
+
+ 
+
+  }
+
+ 
+
+ 
+
+ 
+
+  // api call to delete logo
+
+  delImage(eve){
+
+    eve.preventDefault();
+
+    if( window.confirm('Are you sure to delete the Abstract?')) {
+
+ 
+
+      document.getElementById("btnImgDel").style.display = "none";
+
+    
+
+      MasterService.delAbstract(
+
+          this.state.id
+
+          ).then(
+
+          response => {
+
+              this.componentDidMount();
+
+              this.setState({
+
+ 
+
+                  message3: response.data.message,
+
+                  successful3: false ,                    
+
+              });
+
+          },
+
+          error => {
+
+          // this.componentDidMount();
+
+          const resMessage = "Abstract Could not be Deleted"
+
+          this.setState({
+
+              successful3: false,
+
+              message3: resMessage
+
+          });
+
+          }
+
+      );
+
+     
+
+      setTimeout(function() {
+
+          $('#alertBox3').fadeOut('fast');
+
+      }, 5000);
+
+      // this.componentDidMount();
+
+  }
+
+ 
+
+  else{
+
+ 
+
+      console.log("no");
+
+  }       
+
+  // this.componentDidMount();     
+
+}
+
+ 
+
+  handleRemoveClick = (index) => {
+
+    const list = this.state.inputList;
+
+    list.splice(index, 1);
+
+    this.setState({
+
+      inputList:list
+
+    })
+
+  };
+
+ 
+
+ 
+
+  /*applicable states */
+
+  handleDisplay(optionid){
+
+    // console.log("optionid",optionid)
+
+    this.setState({ actstateid : optionid })
+
+    var dropdownstate=document.getElementById("dropdown-state")
+
+    if(this.state.centralorstate===1){
+
+      dropdownstate.style.display="block";
+
+    }
+
+    else{
+
+      dropdownstate.style.display="none";
+
+    }
+
+    var radio=document.getElementsByName("radiodisplay")
+
+    var state=document.getElementById("Statenamedisplay")
+
+    var dropdowntab=document.getElementById("regapp")
+
+    var activity=document.getElementById("activity")
+
+    var formtable=document.getElementById("formtable")
+
+    var addact=document.getElementById("addbtn")
+
+    var haveall=document.getElementById("haveall")
+
+    var haveall2=document.getElementById("haveall2")
+
+   
+
+    var i=0;
+
+    for(i=0;i<radio.length;i++){
+
+      if(radio[i].checked){
+
+        haveall.style.display="block";
+
+        haveall2.style.display="none";
+
+        var val=radio[i].value
+
+        document.getElementById("statenamehead").innerHTML=val;
+
+      }
+
+    }
+
+ 
+
+    let filter_state=[]
+
+    MasterService.getActById(this.state.id)
+
+      .then((response) => {      
+
+          filter_state = response.data.actList;
+
+          this.setState({testarray : response.data.actList})
+
+          filter_state.forEach((item)=>{
+
+            if(item.state_id===Number(optionid)){
+
+              // console.log("inside")
+
+             
+
+              // console.log(this.state.actstateid)
+
+              if(item.is_registration_require===true){
+
+                this.setState({reg:"yes"})
+
+              }
+
+              else{
+
+                this.setState({ reg:"no" })
+
+              }
+
+           
+
+              if(item.is_sublocation_require==="state"){
+
+                this.setState({subloc:"state"})
+
+              }
+
+              else if(item.is_sublocation_require==="city"){
+
+               this.setState({ subloc:"city" })
+
+              }
+
+              else if(item.is_sublocation_require==="address"){
+
+                this.setState({ subloc:"address" })
+
+              }
+
+              else if(item.is_sublocation_require==="no"){
+
+               this.setState({ subloc:"no" })
+
+              }
+
+           
+
+              this.setState({
+
+                inputList : item.activityList
+
+              })
+
+            }
+
+            else{
+
+              // console.log("outside",optionid)
+
+            }
+
+ 
+
+        })
+
+             
+
+      });
+
+ 
+
+   
+
+  }
+
+ 
+
+  handleAddClick = () => { 
+
+    this.setState({
+
+      inputList : ([...this.state.inputList,{activity_name:"",activity_category:"", month:"",date:"",importance_level:"",rule_information:"",}])
+
+    })
+
+ 
+
+   
+
+  };
+
+ 
+
+  handleInputChange = (e, index) => {
+
+    const { name, value } = e.target;   
+
+    const list = [...this.state.inputList];
+
+    list[index][name] = value;
+
+    this.setState({
+
+      inputList:list,
+
+      [name]: value
+
+    })
+
+  };
+
+  /*non applicable states */
+
+  handleDisplay2(optionid2){
+
+    // console.log("optionid2",optionid2)
+
+    this.setState({ actstateid : optionid2 })
+
+    var dropdownstate=document.getElementById("dropdown-state")
+
+    if(this.state.centralorstate===1){
+
+      dropdownstate.style.display="block";
+
+    }
+
+    else{
+
+      dropdownstate.style.display="none";
+
+    }
+
+    var radio=document.getElementsByName("radiodisplay")
+
+    var state=document.getElementById("Statenamedisplay")
+
+    var dropdowntab=document.getElementById("regapp")
+
+    var activity=document.getElementById("activity")
+
+    var formtable=document.getElementById("formtable")
+
+    var addact=document.getElementById("addbtn")
+
+    var haveall=document.getElementById("haveall")
+
+    var haveall2=document.getElementById("haveall2")
+
+    var i=0;
+
+    for(i=0;i<radio.length;i++){
+
+      if(radio[i].checked){
+
+        haveall2.style.display="block";
+
+        haveall.style.display="none";
+
+        var val=radio[i].value
+
+        document.getElementById("statenamehead").innerHTML=val;
+
+      }
+
+    }
+
+ 
+
+    let filter_state=[]
+
+    MasterService.getActById(this.state.id)
+
+      .then((response) => {      
+
+          filter_state = response.data.actList;
+
+          this.setState({testarray : response.data.actList})
+
+          filter_state.forEach((item)=>{
+
+            if(item.state_id===Number(optionid2)){
+
+              // console.log("inside")
+
+             
+
+              // console.log(this.state.actstateid)
+
+              if(item.is_registration_require===true){
+
+                this.setState({reg:"yes"})
+
+              }
+
+              else{
+
+                this.setState({ reg:"no" })
+
+              }
+
+           
+
+              if(item.is_sublocation_require==="state"){
+
+                this.setState({subloc:"state"})
+
+              }
+
+              else if(item.is_sublocation_require==="city"){
+
+                this.setState({ subloc:"city" })
+
+              }
+
+              else if(item.is_sublocation_require==="address"){
+
+                this.setState({ subloc:"address" })
+
+              }
+
+              else if(item.is_sublocation_require==="no"){
+
+                this.setState({ subloc:"no" })
+
+              }
+
+           
+
+              this.setState({
+
+                inputList : item.activityList
+
+              })
+
+            }
+
+            else{
+
+              // console.log("outside",optionid2)
+
+              this.setState({
+
+                inputList:[ {activity_name:"",activity_category:"", month:"",date:"",importance_level:"",rule_information:"",}],
+
+                subloc:"",
+
+                reg:"",
+
+              })
+
+            }
+
+ 
+
+        })
+
+             
+
+      });  
+
+ 
+
+   
+
+  }
+
+ 
+
+  handleFormValidation(){   
+
+ 
+
+    const{actname,act_group_name,selected,selected1,selected2,barea,startDate,reg,subloc,checked} = this.state; 
+
+    let formErrors = {};   
+
+    let formIsValid = true; 
+
+    
+
+    if(!actname){
+
+      formIsValid = false;   
+
+      formErrors["actname"] = "Act Name is required.";   
+
+    }
+
+    if(!act_group_name)
+
+    {
+
+      formIsValid = false;   
+
+      formErrors["act_group_name"] = "Act Group Name is required.";   
+
+    }
+
+    if(!selected)
+
+    {
+
+      formIsValid = false;   
+
+      formErrors["selected"] = "Industry type is required.";   
+
+    }
+
+    if(!selected1)
+
+    {
+
+      formIsValid = false;    
+
+      formErrors["selected1"] = "Company type is required.";   
+
+    }
+
+    if(!selected2)
+
+    {
+
+      formIsValid = false;   
+
+      formErrors["selected2"] = "Location type is required.";   
+
+    }
+
+    if(!barea)
+
+    {
+
+      formIsValid = false;   
+
+      formErrors["barea"] = "Business Area is required.";   
+
+    }
+
+    if(!startDate)
+
+    {
+
+      formIsValid = false;   
+
+      formErrors["startDate"] = "Act Start Date is required.";   
+
+    }
+
+    if(!startDate)
+
+    {
+
+      formIsValid = false;   
+
+      formErrors["startDate"] = "Act Start Date is required.";   
+
+    }
+
+ 
+
+    if(checked === true && !this.state.selectedFiles)
+
+    {
+
+      formIsValid = false;   
+
+      formErrors["file"] = "Act Abstract is required.";   
+
+    }
+
+ 
+
+    // if(!reg){
+
+    //   formIsValid = false;
+
+    //   formErrors["reg"] = "Select atleast one"
+
+    // }
+
+    // if(!subloc){
+
+    //   formIsValid = false;
+
+    //   formErrors["subloc"] = "Select atleast one"
+
+    // }
+
+ 
+
+      this.setState({ formErrors: formErrors });   
+
+      return formIsValid; 
+
+  }
+
+ 
+
+ 
+
+ 
+
+  /*update api */
+
+  handleSubmit = (e) =>{
+
+    e.preventDefault();
+
+ 
+
+    console.log("testrray1",this.state.testarray)
+
+   
+
+    
+
+    
+
+    this.state.testarray.map( el=>{
+
+ 
+
+      if(el["act_state_id"]){
+
+        delete el["act_state_id"]
+
+      }
+
+      if(el.activityList){
+
+        el.activityList.map( el=>{
+
+          if(el["activities_id"]){
+
+            delete el["activities_id"]
+
+          }     
+
+        })
+
+      }        
+
+    })
+
+    // console.log("original actList",this.state.testarray)
+
+    // console.log("oldinputlist",this.state.inputList)
+
+    let test2 =[]
+
+ 
+
+    test2.push({
+
+      state_id : this.state.actstateid,
+
+      is_registration_require : this.state.reg==="yes" ? true : false,
+
+      is_sublocation_require: this.state.subloc,
+
+      activityList : this.state.inputList
+
+    })
+
+    // console.log("test2",test2)
+
+    let newactlist=[]
+
+    test2.forEach((ii)=>{
+
+        if(ii.state_id){
+
+          // console.log("yes")
+
+ 
+
+          this.state.testarray.forEach((res, index) => {
+
+            if (res.state_id===ii.state_id) {
+
+              this.state.testarray.splice(index, 1) // remove element
+
+            };
+
+          })
+
+          var array1 = this.state.testarray;
+
+          var array2 = test2;
+
+          var array3 = array1.concat(array2)
+
+ 
+
+          newactlist=array3
+
+        }
+
+        else{
+
+          // console.log("no")
+
+          newactlist=this.state.testarray
+
+        }
+
+    })
+
+ 
+
+ 
+
+    // let Final=[]
+
+    // if(this.state.newactList.length>0){   
+
+    //   Final = this.state.newactList
+
+    // }
+
+    // else{
+
+    //   Final=this.state.testarray
+
+    // }
+
+    // console.log("Final",Final)
+
+   
+
+    if (this.handleFormValidation()) {
+
+ 
+
+     
+
+ 
+
+        /*industry */
+
+        let ind_array=[];
+
+        this.state.selected.forEach((item) => {
+
+          ind_array.push(item.value);
+
+        })
+
+        let industry_value=false;
+
+        if(this.state.data.length===this.state.selected.length){
+
+          industry_value=true;
+
+        }
+
+ 
+
+ 
+
+      /*company type */
+
+      let comptype_array=[];
+
+      this.state.selected1.forEach((item1) => {
+
+        comptype_array.push(item1.value);
+
+      })
+
+ 
+
+      let comptype_value=false;
+
+      if(this.state.data_comp.length===this.state.selected1.length){
+
+        comptype_value=true;
+
+      }
+
+ 
+
+      /*location type*/
+
+      let loctype_array=[];
+
+      this.state.selected2.forEach((item2) => {
+
+        loctype_array.push(item2.value);
+
+      })
+
+ 
+
+      let loctype_value=false;
+
+      if(this.state.data_loc.length===this.state.selected.length){
+
+        loctype_value=true;
+
+      }
+
+ 
+
+      var date = new Date(this.state.startDate),
+
+      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+
+      day = ("0" + date.getDate()).slice(-2);
+
+      var startdate = [date.getFullYear(), mnth, day].join("-");
+
+ 
+
+ 
+
+      if(this.state.endDate){
+
+        var date2 = new Date(this.state.endDate),
+
+        mnth2 = ("0" + (date2.getMonth() + 1)).slice(-2),
+
+        day2 = ("0" + date2.getDate()).slice(-2);
+
+        var enddate = [date2.getFullYear(), mnth2, day2].join("-");
+
+       }
+
+       else{
+
+        enddate=null
+
+       }
+
+ 
+
+        var act_data = {
+
+        act_name:this.state.actname,
+
+        all_industries:industry_value,
+
+        industry_id:ind_array,
+
+        all_company_types:comptype_value,
+
+        company_type_id:comptype_array,
+
+        business_area_id:this.state.barea,                  
+
+        location_types:loctype_array,
+
+        act_group_name:this.state.act_group_name,
+
+        has_abstract:this.state.checked,
+
+        act_start_date:startdate,
+
+        act_end_date:enddate,
+
+        central_or_state:this.state.centralorstate,
+
+        has_password:this.state.checked2,
+
+        act_applicable_state:this.state.actapplicable,
+
+        actList: newactlist,
+
+      };
+
+ 
+
+      act_data = JSON.stringify(act_data);
+
+ 
+
+      // console.log("newactList",newactlist)
+
+ 
+
+      // console.log("actdat",act_data)
+
+      // console.log("cf",this.state.selectedFiles[0])
+
+ 
+
+      if(!this.state.fileselected){
+
+          // console.log("sf1")
+
+          MasterService.updateActNoImg(
+
+                act_data,
+
+                this.state.id
+
+                ).then(
+
+                response => {
+
+                  // this.componentDidMount();
+
+                  this.setState({
+
+                    message: response.data.message,
+
+                    successful: true                       
+
+                  });
+
+                 
+
+                },
+
+                error => {
+
+                  const resMessage = "Act Could not be Updated"
+
+                  this.setState({
+
+                      successful: false,
+
+                      message: resMessage
+
+                  });
+
+                }
+
+              );
+
+          
+
+       
+
+      }
+
+      else{
+
+        // this.componentDidMount();
+
+        // console.log("sf3",this.state.selectedFiles[0])
+
+        let currentFile = this.state.selectedFiles[0];
+
+        this.setState({
+
+            currentFile: currentFile,
+
+        });
+
+ 
+
+        MasterService.updateAct(
+
+          currentFile,
+
+          act_data,
+
+          this.state.id
+
+          ).then(
+
+          response => {
+
+            this.componentDidMount();
+
+            this.setState({
+
+              message: response.data.message,
+
+              successful: true                       
+
+            });
+
+          
+
+          },
+
+          error => {
+
+            const resMessage = "Act Could not be Updated"
+
+            this.setState({
+
+                successful: false,
+
+                message: resMessage
+
+            });
+
+          }
+
+        );
+
+       
+
+     
+
+ 
+
+      }
+
+ 
+
+      setTimeout(function() {
+
+        $('#alertBox').fadeOut('fast');
+
+      }, 5000);
+
+     
+
+    }
+
+ 
+
+  }
+
+ 
+
+  render(){
+
+    return(
+
+      <>
+
+ 
+
+<Navbar/>
+
+        <div>
+
+            <div className="shadowcomp" style={{marginTop:"20px"}}>
+
+                <div className="card">
+
+                    <div className="row">
+
+                        <div className="col-md-10">
+
+                            <h1 className="addcomp">Edit Act</h1>
+
+                        </div>
+
+                        <div className="col-md-2">
+
+                            <Link to="/acts">
+
+                                <button  type="button" className="btn btn-back" style={{float:"right",marginTop:"12px",backgroundColor:"black",color:"white"}}>Back</button>
+
+                            </Link>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+ 
+
+            <div className="shadowcomp" style={{marginTop:"10px"}}>
+
+         
+
+     
+
+          <form onSubmit={this.handleSubmit} noValidate style={{paddingTop:"20px"}}>
+
+            <div className="">
+
+           
+
+                <div className="row">
+
+                    <label className="col-sm-3 control-label no-padding-right act-label" htmlFor="form-field-1"> Name <span className="span_star">*</span> </label>
+
+                    <div className="col-sm-9">
+
+                        <input type="text" id="actname" name="actname"  value={this.state.actname}
+
+                                onChange={this.handleChange}
+
+                                className={this.state.formErrors.actname && "input-error"} placeholder="Act Name" className="form-control col-md-12 " disabled/>
+
+            
+
+                
+
+               
+
+                    </div>
+
+                </div>
+
+   
+
+    
+
+                <hr />
+
+            <div className="row">
+
+              <label className="col-sm-3 control-label act-label" htmlFor="form-field-1"> Applicable Industry <span className="span_star">*</span> </label>
+
+              <div className="col-sm-9"  >
+
+               
+
+            
+
+              <MultiSelect  
+
+              id="industryselect" 
+
+              hideSelectedOptions={false}         
+
+              options={this.state.data.map(e => ({ label: e.industry_name, value: e.industry_id}))}
+
+              value={this.state.selected}       
+
+              onChange={this.onChangeIndustry}
+
+              selectAll= "Select All"
+
+              labelledBy="Select location"
+
+              />
+
+              {this.state.formErrors.selected && (
+
+                <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.selected}</div>
+
+              )}
+
+         
+
+                  </div>
+
+    </div>      
+
+     <hr />
+
+     <div className="row">
+
+              <label className="col-sm-3 control-label act-label" htmlFor="form-field-1"> Applicable Company Type <span className="span_star">*</span> </label>
+
+              <div className="col-sm-9"  >
+
+              <MultiSelect
+
+             
+
+              options={this.state.data_comp.map(e => ({ label: e.company_type_name, value: e.company_type_id}))}
+
+            value={this.state.selected1}       
+
+            onChange={this.onChangeCompType}
+
+            labelledBy="Select location"
+
+          />{this.state.formErrors.selected && (
+
+            <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.selected}</div>
+
+          )}
+
+              
+
+                  </div>
+
+    </div>      
+
+     <hr />
+
+     <div className="row">
+
+                            <label className="col-sm-3 control-label no-padding-right act-label" for="form-input-readonly"> Business Area <span className="span_star">*</span></label>
+
+                            <div className="col-sm-3">
+
+                                <select name="barea" value={this.state.barea}
+
+                                  onChange={this.handleChange}
+
+                                  className={this.state.formErrors.barea && "input-error"} style={{width:"300px",height:"40px"}} id="barea">
+
+                                    <option value=""> Select</option>
+
+                                    {this.state.data_ba.map(item => (
+
+                                    <option
+
+                                      key={item.id}
+
+                                      value={item.id}
+
+                                    >
+
+                                      {item.business_area_name}
+
+                                    </option>
+
+                                  ))}
+
+                                    </select>
+
+                                                            {this.state.formErrors.barea && (
+
+                <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.barea}</div>
+
+              )}
+
+                                                           
+
+                            </div>
+
+                           
+
+            <label className="col-sm-2 control-label no-padding-right center act-label" for="form-input-readonly">Location Type<span className="span_star">*</span></label>
+
+            <div className="col-sm-4">
+
+          
+
+               <MultiSelect
+
+            options={this.state.data_loc.map(e => ({ label: e.location_name, value: e.location_id}))}
+
+            value={this.state.selected2}       
+
+            onChange={this.onChangeLocType}
+
+            labelledBy="Select location"
+
+          />{this.state.formErrors.selected2 && (
+
+            <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.selected2}</div>
+
+          )}
+
+           
+
+          </div>
+
+                            </div>
+
+                            <div>
+
+      <hr />
+
+      <div className="row">
+
+        <label className="col-sm-3 control-label act-label" htmlFor="form-input-readonly">Act Group Name<span className="span_star">*</span></label>
+
+        <div className="col-sm-9">
+
+          <input type="text" className="form-control act_group_name" name="act_group_name" value={this.state.act_group_name} id="act_group_name" onChange={this.handleChange}/>
+
+          {this.state.formErrors.act_group_name && (
+
+                <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.act_group_name}</div>
+
+              )}
+
+        </div>
+
+      </div>
+
+      <hr />
+
+      <div className="row abstract">
+
+        <label className="col-sm-3 control-label no-padding-right abstractavailable act-label">Abstract available </label>
+
+        <div className="col-sm-3">
+
+          <label className="middle">
+
+            <input className="ace check-act abstractcheckbox" type="checkbox"   checked={this.state.checked}
+
+            onChange={this.handleChekbox}/>
+
+            <span className="lbl" />
+
+          </label>
+
+          </div>
+
+          {
+
+              this.state.checked &&(
+
+                <div class="col-sm-6 abstractfile">
+
+                  <div className="row col-md-12">
+
+                    {this.state.message3 && (
+
+                        <div className="form-group  col-md-12 " id="alertBox3">
+
+                            <div
+
+                            className={
+
+                                this.state.successful3
+
+                                ? "alert alert-success"
+
+                                : "alert alert-danger"
+
+                            }
+
+                            role="alert"
+
+                            >
+
+                            {this.state.message3}
+
+                            </div>
+
+                        </div>
+
+                    )}
+
+                </div>
+
+                <div class="row">
+
+                    <label class="col-sm-4 control-label no-padding-right act-label">Abstract file <span className="span_star">*</span></label>
+
+                    <div class="col-sm-8">
+
+ 
+
+                          {
+
+                            
+
+                             this.state.pdf ?
+
+                             <>
+
+                               <button  id="logo" onClick={(event)=>{ this.Download()}} style={{border: 'none',background: 'none'}}>
+
+                                 <i class="fa fa-file-pdf-o fa-2x" aria-hidden="true" style={{color:"blue"}}></i>
+
+                               </button>
+
+                               <button id="btnImgDel"
+
+                                        className="btn btn-danger btn-md"
+
+                                        style={{float:"right"}}
+
+                                        onClick={(eve) => this.delImage(eve) }
+
+                                >
+
+                                    <i className="fa fa-trash" aria-hidden="true"></i>
+
+                                </button>
+
+                                 <br/></>
+
+                             :
+
+                             null
+
+                           }
+
+ 
+
+                        <input type="file" name="file" className="abstractuploadfile" onChange={this.selectFile} />
+
+                        {this.state.formErrors.file && (
+
+                          <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.file}</div>
+
+                        )}
+
+                    </div> 
+
+                </div> 
+
+                </div>
+
+              )
+
+          }
+
+       
+
+        
+
+      </div>
+
+      <hr/>
+
+      <div className="row">
+
+      <label className="col-sm-3 control-label no-padding-right act-label"> Act Start Date <span className="span_star">*</span></label>
+
+      <div className="col-sm-3">
+
+        <div>
+
+        <DatePicker
+
+            name="startDate"
+
+            placeholderText="Select Date"
+
+            selected={this.state.startDate}
+
+           selectsStart
+
+           startDate={this.state.startDate}
+
+           endDate={this.state.endDate}
+
+           dateFormat="MMMM d, yyyy"
+
+           value={this.state.startDate}        
+
+          
+
+           // add the endDate to your startDate DatePicker now that it is defined
+
+           onChange={this.handleDate}
+
+         />
+
+            {this.state.formErrors.startDate && (
+
+                <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.startDate}</div>
+
+              )}
+
+        </div>
+
+      </div>
+
+      <label className="col-sm-3 control-label no-padding-right center act-label">Act End Date</label>
+
+      <div className="col-sm-3">
+
+        <div>
+
+        <DatePicker
+
+           selected={this.state.endDate}
+
+           selectsEnd
+
+           startDate={this.state.startDate}
+
+           endDate={this.state.endDate}
+
+           minDate={this.state.startDate}
+
+           value={this.state.endDate}
+
+           onChange={this.handleDate2}
+
+         />
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div>
+
+    <hr />
+
+   
+
+      <div className="row">
+
+        <label className="col-sm-3 control-label no-padding-right act-label" htmlFor="form-field-6">Central and State </label>
+
+        <div className="col-sm-5">
+
+          <div className="radio-inline">
+
+            <label>
+
+              <input name="centralandstate" type="radio" value='1' className="ace central centralandstate" id="central" disabled="disabled" checked={this.state.centralorstate===1}/>
+
+              <span className="lbl"> Central</span>
+
+            </label>
+
+           
+
+          </div>
+
+            
+
+          <br/>
+
+          <div className="radio-inline">
+
+            <label>
+
+              <input name="centralandstate" type="radio" value='0' className="ace central centralandstate" id="state" checked={this.state.centralorstate===0}  disabled="disabled"/>
+
+              <span className="lbl"> State </span>
+
+            </label>
+
+          </div>
+
+        </div>
+
+        {/* <label className="col-md-3 passwordapplicable" ></label> */}
+
+        <div className="col-sm-3" >
+
+          <label className="middle act-label">Password Applicable &nbsp;&nbsp;&nbsp;
+
+            <input className="ace check-password passwordcheckbox" type="checkbox" name="passwordcheckbox" checked={this.state.checked2} onChange={this.handleChekbox2}/>
+
+            <span className="lbl" />
+
+          </label>
+
+        </div>
+
+      </div>
+
+      <hr />
+
+   
+
+        </div>
+
+        </div>
+
+        <div>
+
+  <hr />
+
+  <div className="row">
+
+    <label className="col-sm-3 control-label no-padding-top act-label" htmlFor="duallist"> States </label>
+
+    <div className="col-sm-4 applicablestate">
+
+      <h3 className="col-sm-10 col-xs-10  mt ">Applicable State</h3>
+
+      <div className="row col-md-12">
+
+            {this.state.message2 && (
+
+                <div className="form-group  col-md-12 " id="alertBox2">
+
+                    <div
+
+                    className={
+
+                        this.state.successful2
+
+                        ? "alert alert-success"
+
+                        : "alert alert-danger"
+
+                    }
+
+                    role="alert"
+
+                    >
+
+                    {this.state.message2}
+
+                    </div>
+
+                </div>
+
+            )}
+
+        </div>
+
+      <div className="act-border col-md-12 col-xs-12 scrollable-ul" style={{listStyleType:"none"}}>
+
+        <div className="radio-inline applicableradio-inline ">
+
+            {
+
+                this.state.actList.map((option,i)=>{
+
+                  // return( <div style={{padding:'2px'}} value={option.value}>                       
+
+                  //           <li>
+
+                  //             <input name="radiodisplay" type="radio" key={option.value} onClick={this.handleDisplay(option.value)}  className="ace appstate" value={option.value} />
+
+                  //             <span className="lbl">{option.label}</span>
+
+                  //             <span className="displaynone removestate" onClick={this.deleteItem}><i className="fa fa-trash btn-danger btn-sm moveright pull-right" id="delst_3" /></span>
+
+                  //           </li>                    
+
+                  //       </div>)
+
+                  return <div value={option.value} id="test">
+
+                        <label>
+
+                          <li>
+
+                            <input name="radiodisplay" type="radio" onChange={(event) =>{ this.handleDisplay(option.value) } }  className="ace appstate" value={option.label} />
+
+                            <span className="lbl"> {option.label}</span>
+
+                          </li>         
+
+                        </label>
+
+                        <span className="displaynone removestate" onClick={(event) =>{ this.deleteState(option.value)}}>
+
+                          <i className="fa fa-trash btn-danger btn-sm moveright pull-right" />
+
+                        </span>
+
+                      </div>       
+
+                })
+
+            }
+
+         
+
+        </div>
+
+          <br/>
+
+ 
+
+         
+
+      </div>
+
+    </div>
+
+    <div className="col-sm-4 nonapplicablestate">
+
+      <h3 className="col-sm-12 mt">Non Applicable State</h3>
+
+      <div className="act-border col-md-12 col-xs-12 scrollable-ul" style={{listStyleType:"none"}}>
+
+        <div className="radio-inline nonapplicableradio-inline">
+
+            {
+
+ 
+
+                this.state.result.map((option2,i)=>{
+
+ 
+
+                  return <div value={option2.value} id="test">
+
+                        <label>
+
+                          <li>
+
+                            <input name="radiodisplay" type="radio" onChange={(event) =>{ this.handleDisplay2(option2.value) } }  className="ace appstate" value={option2.label} disabled={this.state.disable1===true}/>
+
+                            <span className="lbl"> {option2.label}</span>
+
+                          </li>         
+
+                        </label>
+
+                      </div>
+
+                })
+
+            }
+
+       
+
+        </div>
+
+      
+
+       
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <hr />
+
+ 
+
+</div>
+
+{/* <div id="try">
+
+  <div className="activitytable displaynone" id="activity" >
+
+    <div className="table" id="no-more-tables">
+
+      <div className="thead">
+
+        <div className="row">
+
+          <span className="th col-md-3">
+
+            <label>Activity Name <span className="span_star">*</span></label>
+
+          </span>
+
+          <span className="th col-md-2">
+
+            <label>Activity Category <span className="span_star">*</span></label>
+
+          </span>
+
+          <span className="col-md-1 text-center">
+
+            <label>Display</label>
+
+          </span>
+
+          <span className="col-md-1">
+
+            <label>Month <span className="span_star">*</span></label>
+
+          </span>
+
+          <span className="col-md-1">
+
+            <label>Dates <span className="span_star">*</span></label>
+
+          </span>
+
+          <span className="col-md-1">
+
+            <label>Importance Level <span className="span_star">*</span></label>
+
+          </span>
+
+          <span className="col-md-2">
+
+            <label>Rule Information</label>
+
+          </span>
+
+          <span className="col-md-1">
+
+            <label>Action</label>
+
+          </span>
+
+        </div>
+
+      </div>                                      
+
+      <div className="tbody activitytbody">
+
+      </div>
+
+    </div>
+
+  </div>
+
+  </div> */}
+
+  <div id="haveall" style={{display:"none"}}>
+
+    <div className="row" id="Statenamedisplay" >   
+
+      <h3 className="col-sm-10 col-xs-10 shad mt " id="statenamehead" style={{color:"#0057FF"}}></h3>
+
+ 
+
+        <br/><br/><br/><hr/>
+
+        <label className="col-sm-3 control-label no-padding-right act-label" htmlFor="form-field-1"> Name <span className="span_star">*</span> </label>
+
+        <div className="col-sm-9">
+
+          <input type="text" id="activityname" name="activityname"  value={this.state.actname}
+
+              onChange={this.handleChange}
+
+              className={this.state.formErrors.actname && "input-error"}  className="form-control col-md-12 " />
+
+           
+
+            {this.state.formErrors.actname && (
+
+              <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.actname}</div>
+
+            )}
+
+             
+
+          </div>
+
+    </div>   
+
+    
+
+    <hr />
+
+ 
+
+    <div className="row"   id="regapp">
+
+      <label className="col-sm-3 control-label no-padding-right act-label">Registration Applicable<span className="span_star">*</span></label>
+
+      <div className="col-sm-3">
+
+        <select name="reg" value={this.state.reg}          
+
+            className={this.state.formErrors.reg && "input-error"} onChange={this.handleChange} style={{width:"300px",height:"40px"}} id="reg">
+
+            <option value="">Select</option>
+
+            <option value="yes">Yes</option>
+
+            <option value="no">No</option>           
+
+        </select>
+
+        {this.state.formErrors.reg && (
+
+          <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.reg}</div>
+
+        )}                                                      
+
+     </div>
+
+     &nbsp;
+
+     &nbsp;
+
+     &nbsp;
+
+    
+
+      <label className="col-sm-2 control-label no-padding-right act-label">Sub Location<span className="span_star">*</span></label>
+
+      <div className="col-sm-2">
+
+        <select name="subloc" value={this.state.subloc}           
+
+            className={this.state.formErrors.subloc && "input-error"} onChange={this.handleChange} style={{width:"300px",height:"40px"}} id="subloc">
+
+            <option value="">Select</option>
+
+            <option value="state" id="dropdown-state" className="">State</option>
+
+            <option value="city">City</option>
+
+            <option value="address">Address</option>
+
+            <option value="no">Not Applicable</option>
+
+           
+
+        </select>
+
+        {this.state.formErrors.subloc && (
+
+           <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.subloc}</div>
+
+        )}                                                       
+
+    
+
+      </div>
+
+    </div>
+
+    <br></br>
+
+    <hr/>
+
+    &nbsp;
+
+    &nbsp;
+
+    &nbsp;
+
+    <div className="activitytable displaynone" id="activity"  >
+
+      <div className="table" id="no-more-tables">
+
+        <div className="thead">
+
+          <div className="row">
+
+            <span className="th col-md-3">
+
+              <label className="act-label">Activity Name </label><span className="span_star">*</span>
+
+            </span>
+
+            <span className="th col-md-2">
+
+              <label className="act-label">Activity Category </label><span className="span_star">*</span>
+
+            </span>       
+
+            <span className="col-md-1">
+
+              <label className="act-label">Month </label><span className="span_star">*</span>
+
+            </span>
+
+            <span className="col-md-1">
+
+              <label className="act-label">Dates </label><span className="span_star">*</span>
+
+            </span>
+
+            <span className="col-md-1">
+
+              <label className="act-label">Importance Level</label><span className="span_star">*</span>
+
+            </span>
+
+            <span className="col-md-3">
+
+              <label className="act-label">Rule Information</label>
+
+            </span>
+
+            <span className="col-md-1">
+
+              <label className="act-label">Action</label>
+
+            </span>
+
+          </div>
+
+        </div>  
+
+      </div>
+
+    </div>            
+
+    <div id="activitydiv" className="" id="activitytable" >
+
+      <div className="tr activityrow">
+
+        <form name="stateactivity" className="stateactivformcls bs-example ng-pristine ng-valid ng-scope commonactivityform">
+
+          {
+
+              this.state.inputList.length > 0 ?
+
+              this.state.inputList.map((x,i)=>{
+
+              return(  
+
+                <>       
+
+ 
+
+              <div className="row"  id="formtable" style={{padding: "2% 0%"}}>
+
+                <div data-title="Activit Name" className="td col-md-3">
+
+                  <textarea name="activity_name" className="form-control activityname" value={x.activity_name} onChange={e=>this.handleInputChange(e,i)} />
+
+                    {this.state.formErrors.activity_name && (
+
+                      <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.activity_name}</div>
+
+                    )}    
+
+                </div>
+
+                
+
+                <div data-title="Activity Category" className="td col-md-2">
+
+                  <select name="activity_category" value={x.activity_category} onChange={e=>this.handleInputChange(e,i)} className="form-control activitycategory">
+
+                    <option value="">Select</option>
+
+                    <option value="Action">Action</option>
+
+                    <option value="Display">Display</option>
+
+                    <option value="Payment">Payment</option>
+
+                    <option value="Registers">Registers</option>
+
+                    <option value="Return">Return</option>
+
+                  </select>
+
+                  {this.state.formErrors.activity_category && (
+
+                    <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.activity_category}</div>
+
+                  )}
+
+                </div>
+
+     
+
+                <div data-title="Month" className="td col-md-1">
+
+                  <select name="month"  value={x.month}
+
+                        onChange={e => this.handleInputChange(e, i)}className="form-control activitymonth">
+
+                    <option value={0} selected="selected">All Months</option>
+
+                    <option value={1}>January</option>
+
+                    <option value={2}>February</option>
+
+                    <option value={3}>March</option>
+
+                    <option value={4}>April</option>
+
+                    <option value={5}>May</option>
+
+                    <option value={6}>June</option>
+
+                    <option value={7}>July</option>
+
+                    <option value={8}>August</option>
+
+                    <option value={9}>September</option>
+
+                   <option value={10}>October</option>
+
+                    <option value={11}>November</option>
+
+                    <option value={12}>December</option>
+
+                  </select>
+
+                  {this.state.formErrors.month && (
+
+                    <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.month}</div>
+
+                  )}
+
+                </div>
+
+                <div data-title="Dates" className="td col-md-1">
+
+                  <select name="date"  value={x.date}
+
+                          onChange={e => this.handleInputChange(e, i)}className="form-control activitydate">
+
+                    <option value="">Select</option>
+
+                    <option value={1}>1</option>
+
+                    <option value={2}>2</option>
+
+                    <option value={3}>3</option>
+
+                    <option value={4}>4</option>
+
+                    <option value={5}>5</option>
+
+                    <option value={6}>6</option>
+
+                    <option value={7}>7</option>
+
+                    <option value={8}>8</option>
+
+                    <option value={9}>9</option>
+
+                    <option value={10}>10</option>
+
+                    <option value={11}>11</option>
+
+                    <option value={12}>12</option>
+
+                    <option value={13}>13</option>
+
+                    <option value={14}>14</option>
+
+                    <option value={15} selected="&quot;selected&quot;">15</option>
+
+                    <option value={16}>16</option>
+
+                    <option value={17}>17</option>
+
+                    <option value={18}>18</option>
+
+                    <option value={19}>19</option>
+
+                    <option value={20}>20</option>
+
+                    <option value={21}>21</option>
+
+                    <option value={22}>22</option>
+
+                    <option value={23}>23</option>
+
+                    <option value={24}>24</option>
+
+                    <option value={25}>25</option>
+
+                    <option value={26}>26</option>
+
+                    <option value={27}>27</option>
+
+                    <option value={28}>28</option>
+
+                    <option value={29}>29</option>
+
+                    <option value={30}>30</option>
+
+                    <option value={31} style={{display: 'none'}}>31</option>
+
+                  </select> {this.state.formErrors.date && (
+
+                    <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.date}</div>
+
+                  )}
+
+ 
+
+                </div>
+
+                <div data-title="Importance Level" className="td col-md-1">
+
+                  <select name="importance_level"  value={x.importance_level}
+
+                          onChange={e => this.handleInputChange(e, i)}className="form-control importancelevel">
+
+                    <option value>Select</option>
+
+                    <option value="high">High</option>
+
+                    <option value="low">Low</option>
+
+                  </select>
+
+                  {this.state.formErrors.importance_level && (
+
+                    <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.importance_level}</div>
+
+                  )}
+
+ 
+
+                </div>
+
+                <div data-title="Rule Information" className="td col-md-3">
+
+                  <input type="text"  value={x.rule_information}
+
+                    onChange={e => this.handleInputChange(e, i)} name="activityrule_information" placeholder="Rule Information" className="form-control ruleinfo" />
+
+                 
+
+                </div>
+
+                <div data-title="Action" className="td col-md-1">
+
+                  {this.state.inputList.length !== 0 && <button type="button" className="button4"><i className="far fa-trash-alt"  onClick={() => this.handleRemoveClick(i)}/> </button>}
+
+       
+
+                </div>
+
+    
+
+              </div>
+
+   
+
+              </>
+
+     
+
+            )
+
+            })
+
+ 
+
+            :
+
+            <div>
+
+                <p style={{color:"red"}} className="text-center">No Activity Found</p>
+
+            </div>
+
+   
+
+          }                            
+
+        </form>
+
+      </div>
+
+    </div>
+
+ 
+
+ 
+
+{/* </div> */}
+
+    <hr/>
+
+    <div className="wizard-actions addactivityline"   id="addbtn">
+
+      <button type="button" className="btn btn-danger btn_cancel btn-sm pull-right" style={{marginRight:"50px"}} onClick={this.handleAddClick} id="deleteactivity" ><i className="fa fa-plus"   /> Add Activity</button>
+
+    </div>
+
+  </div>
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+          {/* non applicable div */}
+
+  <div id="haveall2" style={{display:"none"}}>
+
+    <div className="row" id="Statenamedisplay" >   
+
+      <h3 className="col-sm-10 col-xs-10 shad mt " id="statenamehead" style={{color:"#0057FF"}}></h3>
+
+ 
+
+        <br/><br/><br/><hr/>
+
+        <label className="col-sm-3 control-label no-padding-right act-label" htmlFor="form-field-1"> Name <span className="span_star">*</span> </label>
+
+        <div className="col-sm-9">
+
+          <input type="text" id="activityname" name="activityname"  value={this.state.actname}
+
+              onChange={this.handleChange}
+
+              className={this.state.formErrors.actname && "input-error"}  className="form-control col-md-12 " />
+
+           
+
+            {this.state.formErrors.actname && (
+
+              <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.actname}</div>
+
+            )}
+
+             
+
+          </div>
+
+    </div>   
+
+    
+
+    <hr />
+
+ 
+
+    <div className="row"   id="regapp">
+
+      <label className="col-sm-3 control-label no-padding-right act-label">Registration Applicable<span className="span_star">*</span></label>
+
+      <div className="col-sm-3">
+
+        <select name="reg" value={this.state.reg}          
+
+            className={this.state.formErrors.reg && "input-error"} onChange={this.handleChange} style={{width:"300px",height:"40px"}} id="reg">
+
+            <option value="">Select</option>
+
+            <option value="yes">Yes</option>
+
+            <option value="no">No</option>           
+
+        </select>
+
+        {this.state.formErrors.reg && (
+
+          <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.reg}</div>
+
+        )}                                                      
+
+     </div>
+
+     &nbsp;
+
+    &nbsp;
+
+     &nbsp;
+
+    
+
+      <label className="col-sm-2 control-label no-padding-right act-label">Sub Location<span className="span_star">*</span></label>
+
+      <div className="col-sm-2">
+
+        <select name="subloc" value={this.state.subloc}            
+
+            className={this.state.formErrors.subloc && "input-error"} onChange={this.handleChange} style={{width:"300px",height:"40px"}} id="subloc">
+
+            <option value="">Select</option>
+
+            <option value="state" id="dropdown-state" className="">State</option>
+
+            <option value="city">City</option>
+
+            <option value="address">Address</option>
+
+            <option value="no">Not Applicable</option>
+
+           
+
+        </select>
+
+        {this.state.formErrors.subloc && (
+
+           <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.subloc}</div>
+
+        )}                                                       
+
+    
+
+      </div>
+
+    </div>
+
+    <br></br>
+
+    <hr/>
+
+    &nbsp;
+
+    &nbsp;
+
+    &nbsp;
+
+    <div className="activitytable displaynone" id="activity"  >
+
+      <div className="table" id="no-more-tables">
+
+        <div className="thead">
+
+          <div className="row">
+
+            <span className="th col-md-3">
+
+              <label className="act-label">Activity Name </label><span className="span_star">*</span>
+
+            </span>
+
+            <span className="th col-md-2">
+
+              <label className="act-label">Activity Category </label><span className="span_star">*</span>
+
+            </span>       
+
+            <span className="col-md-1">
+
+              <label className="act-label">Month </label><span className="span_star">*</span>
+
+            </span>
+
+            <span className="col-md-1">
+
+              <label className="act-label">Dates </label><span className="span_star">*</span>
+
+            </span>
+
+            <span className="col-md-1">
+
+              <label className="act-label">Importance Level</label><span className="span_star">*</span>
+
+            </span>
+
+            <span className="col-md-3">
+
+              <label className="act-label">Rule Information</label>
+
+            </span>
+
+            <span className="col-md-1">
+
+              <label className="act-label">Action</label>
+
+            </span>
+
+          </div>
+
+        </div>  
+
+      </div>
+
+    </div>            
+
+    <div id="activitydiv" className="" id="activitytable" >
+
+      <div className="tr activityrow">
+
+        <form name="stateactivity" className="stateactivformcls bs-example ng-pristine ng-valid ng-scope commonactivityform">
+
+          {
+
+             
+
+              this.state.inputList.map((x,i)=>{
+
+              return(  
+
+                <>       
+
+ 
+
+              <div className="row"  id="formtable" style={{padding: "2% 0%"}}>
+
+                <div data-title="Activit Name" className="td col-md-3">
+
+                  <textarea name="activity_name" className="form-control activityname" value={x.activity_name} onChange={e=>this.handleInputChange(e,i)} />
+
+                    {this.state.formErrors.activity_name && (
+
+                      <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.activity_name}</div>
+
+                    )}    
+
+                </div>
+
+                
+
+                <div data-title="Activity Category" className="td col-md-2">
+
+                  <select name="activity_category" value={x.activity_category} onChange={e=>this.handleInputChange(e,i)} className="form-control activitycategory">
+
+                    <option value="">Select</option>
+
+                    <option value="Action">Action</option>
+
+                    <option value="Display">Display</option>
+
+                    <option value="Payment">Payment</option>
+
+                    <option value="Registers">Registers</option>
+
+                    <option value="Return">Return</option>
+
+                  </select>
+
+                  {this.state.formErrors.activity_category && (
+
+                    <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.activity_category}</div>
+
+                  )}
+
+                </div>
+
+     
+
+                <div data-title="Month" className="td col-md-1">
+
+                  <select name="month"  value={x.month}
+
+                        onChange={e => this.handleInputChange(e, i)}className="form-control activitymonth">
+
+                    <option value={0} selected="selected">All Months</option>
+
+                    <option value={1}>January</option>
+
+                    <option value={2}>February</option>
+
+                    <option value={3}>March</option>
+
+                    <option value={4}>April</option>
+
+                    <option value={5}>May</option>
+
+                    <option value={6}>June</option>
+
+                    <option value={7}>July</option>
+
+                    <option value={8}>August</option>
+
+                    <option value={9}>September</option>
+
+                    <option value={10}>October</option>
+
+                    <option value={11}>November</option>
+
+                    <option value={12}>December</option>
+
+                  </select>
+
+                  {this.state.formErrors.month && (
+
+                    <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.month}</div>
+
+                  )}
+
+                </div>
+
+                <div data-title="Dates" className="td col-md-1">
+
+                  <select name="date"  value={x.date}
+
+                          onChange={e => this.handleInputChange(e, i)}className="form-control activitydate">
+
+                    <option value="">Select</option>
+
+                    <option value={1}>1</option>
+
+                    <option value={2}>2</option>
+
+                    <option value={3}>3</option>
+
+                    <option value={4}>4</option>
+
+                    <option value={5}>5</option>
+
+                    <option value={6}>6</option>
+
+                    <option value={7}>7</option>
+
+                    <option value={8}>8</option>
+
+                    <option value={9}>9</option>
+
+                    <option value={10}>10</option>
+
+                    <option value={11}>11</option>
+
+                    <option value={12}>12</option>
+
+                    <option value={13}>13</option>
+
+                    <option value={14}>14</option>
+
+                    <option value={15} selected="&quot;selected&quot;">15</option>
+
+                    <option value={16}>16</option>
+
+                    <option value={17}>17</option>
+
+                    <option value={18}>18</option>
+
+                    <option value={19}>19</option>
+
+                    <option value={20}>20</option>
+
+                    <option value={21}>21</option>
+
+                   <option value={22}>22</option>
+
+                    <option value={23}>23</option>
+
+                    <option value={24}>24</option>
+
+                    <option value={25}>25</option>
+
+                    <option value={26}>26</option>
+
+                    <option value={27}>27</option>
+
+                    <option value={28}>28</option>
+
+                    <option value={29}>29</option>
+
+                    <option value={30}>30</option>
+
+                    <option value={31} style={{display: 'none'}}>31</option>
+
+                  </select> {this.state.formErrors.date && (
+
+                    <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.date}</div>
+
+                  )}
+
+ 
+
+                </div>
+
+                <div data-title="Importance Level" className="td col-md-1">
+
+                  <select name="importance_level"  value={x.importance_level}
+
+                          onChange={e => this.handleInputChange(e, i)}className="form-control importancelevel">
+
+                    <option value>Select</option>
+
+                    <option value="high">High</option>
+
+                    <option value="low">Low</option>
+
+                  </select>
+
+                  {this.state.formErrors.importance_level && (
+
+                    <div style={{ color: "red", paddingBottom: 10 }}>{this.state.formErrors.importance_level}</div>
+
+                  )}
+
+ 
+
+                </div>
+
+                <div data-title="Rule Information" className="td col-md-3">
+
+                  <input type="text"  value={x.rule_information}
+
+                    onChange={e => this.handleInputChange(e, i)} name="activityrule_information" placeholder="Rule Information" className="form-control ruleinfo" />
+
+                 
+
+                </div>
+
+                <div data-title="Action" className="td col-md-1">
+
+                  {this.state.inputList.length !== 0 && <button type="button" className="button4"><i className="far fa-trash-alt"  onClick={() => this.handleRemoveClick(i)}/> </button>}
+
+       
+
+                </div>
+
+    
+
+              </div>
+
+   
+
+              </>
+
+     
+
+            )
+
+            })
+
+   
+
+          }                            
+
+        </form>
+
+      </div>
+
+    </div>
+
+ 
+
+ 
+
+{/* </div> */}
+
+    <hr/>
+
+    <div className="wizard-actions addactivityline"   id="addbtn">
+
+      <button type="button" className="btn btn-danger btn_cancel btn-sm pull-right" style={{marginRight:"50px"}} onClick={this.handleAddClick} id="deleteactivity" ><i className="fa fa-plus"   /> Add Activity</button>
+
+    </div>
+
+  </div>
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+    
+
+        </div>
+
+        <div className="row col-md-12">
+
+            {this.state.message && (
+
+                <div className="form-group  col-md-12 " id="alertBox">
+
+                    <div
+
+                    className={
+
+                        this.state.successful
+
+                        ? "alert alert-success"
+
+                        : "alert alert-danger"
+
+                    }
+
+                    role="alert"
+
+                    >
+
+                    {this.state.message}
+
+                    </div>
+
+                </div>
+
+            )}
+
+        </div>
+
+        <div className="row col-md-12">
+
+         <hr/>
+
+       <div className="wizard-actions addactivityline text-right" >
+
+        <button type="submit" className="btn btn-success" >Update</button>
+
+         &nbsp;
+
+         &nbsp;
+
+         <Link to="/acts">
+
+         <button type="button" className="btn btn-danger btn_cancel" style={{marginRight:"40px"}}>Cancel</button>
+
+         </Link>
+
+       </div>
+
+    </div>
+
+ 
+
+       
+
+        </form>
+
+        </div>
+
+  </div>
+
+  </>
+
+    )
+
+  }
+
+}
+
+ 
+
+export default UpdateAct
